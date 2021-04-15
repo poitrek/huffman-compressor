@@ -2,6 +2,9 @@
 
 
 class HuffmanTreeNode:
+    """
+    Class representing a node of the Huffman symbol-code tree
+    """
 
     def __init__(self, symbol, cnt, left=None, right=None):
         self.symbol = symbol
