@@ -1,5 +1,5 @@
 import unittest
-from .huffman_coding import insert_sorted, SimpleHuffmanCoder, HuffmanTreeNode
+from huffman_coding import insert_sorted, SimpleHuffmanCoder, HuffmanTreeNode, inverse_symbol_code_length_dict
 
 
 class InsertSortedTest(unittest.TestCase):
@@ -68,13 +68,22 @@ class HuffmanStringCoderTest(unittest.TestCase):
         string = "abbabaabbbbab"
         self.assertEqual(coder.decode(coder.encode(string)), string)
 
-    def test_huffman(self):
-        string = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore " \
-                 "et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut " \
-                 "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse " \
-                 "cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, " \
-                 "sunt in culpa qui officia deserunt mollit anim id est laborum "
-        coder = SimpleHuffmanCoder(string)
+    # def test_huffman(self):
+    #     string = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore " \
+    #              "et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut " \
+    #              "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse " \
+    #              "cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, " \
+    #              "sunt in culpa qui officia deserunt mollit anim id est laborum "
+    #     coder = SimpleHuffmanCoder(string)
+
+
+class OthersTest(unittest.TestCase):
+
+    def test_inverse_symbol_code_length_dict(self):
+        symbol_code_len = {'r': 4, 'b': 6, 'y': 6, 'e': 3, 'i': 4, 'a': 4, 'o': 4, ' ': 3, 'c': 5, 'f': 6,
+                           'd': 6, 'l': 5, 'm': 6}
+        target_inv_dict = {3: ' e', 4: 'aior', 5: 'cl', 6: 'bdfmy'}
+        self.assertDictEqual(target_inv_dict, inverse_symbol_code_length_dict(symbol_code_len))
 
 
 if __name__ == '__main__':

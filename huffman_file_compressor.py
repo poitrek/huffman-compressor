@@ -31,8 +31,10 @@ def chr_to_byte(chr_arr):
         bits += format(ord(ch), '#010b').replace('0b', '')
     return bits
 
-# TODO: zip to a binary file. Convert metadata to bytestream
-
+# TODO:
+# - Shrink metadata format (shorter than json)
+# - Correction for remaining bits in the encoded body
+# ad.1.
 
 zip_separator = '|'
 

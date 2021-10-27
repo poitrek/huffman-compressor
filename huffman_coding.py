@@ -26,10 +26,6 @@ class HuffmanTreeNode:
     def is_leaf(self):
         return not (self.left and self.right)
 
-    # Not working
-    def __str__(self):
-        return f"({self.symbol}, {self.cnt})\n---{self.left.__str__}\n---{self.right.__str__}"
-
 
 def insert_sorted(seq, obj, key=lambda x: x, desc=False):
     """Inserts an object into sorted iterable sequence"""
@@ -125,13 +121,20 @@ class SimpleHuffmanCoder:
 
 
 class CanonicalHuffmanCoder(SimpleHuffmanCoder):
-
+    """
+    Improved Huffman coder - reduced data (message) header, faster decoding
+    """
     def __init__(self, string=None):
         self._symbol_code_lengths = dict()
         self._symbol_code_arr = None
         super().__init__(string)
 
     def fit(self, data):
+        """
+        Fits the coder to the distribution of symbols of a sample data in order
+        to encode it optimally.
+        :param data: a sample of data (string) for the coder to be fitted to
+        """
         self._make_code_tree(data)
         self._make_code_dict()
         for symbol, code in self._code_dict.items():
@@ -166,6 +169,12 @@ class CanonicalHuffmanCoder(SimpleHuffmanCoder):
         return string_enc, self._symbol_code_lengths
 
     def decode(self, string, code_lengths) -> str:
+        """
+        Decodes a previously encoded string.
+        :param string: encoded message, string of bits
+        :param code_lengths: dictionary {<symbol>:<code length>}
+        :returns: decoded message, string
+        """
         # Generate canonical codes
         self._make_canonical_dict(code_lengths)
         # Get maximum code length
@@ -187,6 +196,26 @@ class CanonicalHuffmanCoder(SimpleHuffmanCoder):
             string_dec += symbol_dec
             string = string[code_lengths[symbol_dec]:]
         return string_dec
+
+# TODO: inverse function of the one below
+# (convert shrinked dictionary to the simple dict)
+
+def inverse_symbol_code_length_dict(sym_code_lengths):
+    """
+    Inverses a dictionary {<symbol>: <length of code>} to a dictionary
+    {<length of code>: <symbols>}, where symbols are sorted alphabetically
+    :param sym_code_lengths: dict
+    :return: dict
+    """
+    inv_sym_code_len = dict()
+    for s, clen in sym_code_lengths.items():
+        if clen not in inv_sym_code_len:
+            inv_sym_code_len[clen] = s
+        else:
+            inv_sym_code_len[clen] += s
+    for clen, symbols in inv_sym_code_len.items():
+        inv_sym_code_len[clen] = ''.join(sorted(symbols))
+    return inv_sym_code_len
 
 
 if __name__ == '__main__':
@@ -235,3 +264,7 @@ if __name__ == '__main__':
         print("CODING CORRECT")
     else:
         print("SOMETHING WENT WRONG!")
+    print("Input length:", len(text), "bytes")
+    len_enc = len(text_enc) // 8
+    print("Encoded length:", len_enc, "bytes")
+    print("Compression ratio:", len_enc / len(text))
